@@ -4,7 +4,7 @@ CREATE DATABASE bamazon;
 
 USE bamazon;
 
-CREATE TABLE items (
+CREATE TABLE products (
 	item_id INTEGER (11) AUTO_INCREMENT NOT NULL,
     product_name VARCHAR (50) NOT NULL,
     department_name VARCHAR (50) NOT NULL,
@@ -14,34 +14,34 @@ CREATE TABLE items (
     PRIMARY KEY (item_id)
 );
 
-INSERT INTO items (product_name, department_name, price, stock_quantity)
+INSERT INTO products (product_name, department_name, price, stock_quantity)
 VALUES ("Scrabble", "Board Games", 10, 100);
 
-INSERT INTO items (product_name, department_name, price, stock_quantity)
+INSERT INTO products (product_name, department_name, price, stock_quantity)
 VALUES ("Clue", "Board Games", 10, 100);
 
-INSERT INTO items (product_name, department_name, price, stock_quantity)
+INSERT INTO products (product_name, department_name, price, stock_quantity)
 VALUES ("Monopoly", "Board Games", 10, 100);
 
-INSERT INTO items (product_name, department_name, price, stock_quantity)
+INSERT INTO products (product_name, department_name, price, stock_quantity)
 VALUES ("XBox One X", "Game System", 300, 50);
 
-INSERT INTO items (product_name, department_name, price, stock_quantity)
+INSERT INTO products (product_name, department_name, price, stock_quantity)
 VALUES ("PlayStation 4", "Game System", 300, 100);
 
-INSERT INTO items (product_name, department_name, price, stock_quantity)
+INSERT INTO products (product_name, department_name, price, stock_quantity)
 VALUES ("Sour Patch Kids", "Candy", 2, 500);
 
-INSERT INTO items (product_name, department_name, price, stock_quantity)
+INSERT INTO products (product_name, department_name, price, stock_quantity)
 VALUES ("Twizzlers", "Candy", 3, 1000);
 
-INSERT INTO items (product_name, department_name, price, stock_quantity)
+INSERT INTO products (product_name, department_name, price, stock_quantity)
 VALUES ("Coding 101", "Instructional Books", 20, 100);
 
-INSERT INTO items (product_name, department_name, price, stock_quantity)
+INSERT INTO products (product_name, department_name, price, stock_quantity)
 VALUES ("JavaScript 101", "Instructional Books", 25, 100);
 
-INSERT INTO items (product_name, department_name, price, stock_quantity)
+INSERT INTO products (product_name, department_name, price, stock_quantity)
 VALUES ("mySQL for Dummies", "Instructional Books", 18, 100);
 
 CREATE TABLE departments (
@@ -63,14 +63,8 @@ VALUES ("Candy", 10000);
 INSERT INTO departments (department_name, over_head_costs)
 VALUES ("Instructional Books", 40000);
 
-SELECT * FROM departments;
 
-SELECT dept.department_id, dept.department_name, dept.over_head_costs, SUM(items.product_sales) AS 'product_sales'
-FROM departments AS dept
-JOIN items
-ON dept.department_name = items.department_name
-GROUP BY dept.department_id;
-
+SELECT * FROM products;
 
 
 

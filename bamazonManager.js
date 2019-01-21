@@ -1,10 +1,4 @@
-//run inquirer function with various choices
-//if view products for sale 
-//display all items
-//if view low inventory
-//display products with inventory count less than five (if statment), if none, console log nothing under 5
-//add to inventory --> updates database and using prompt to grab by how mich 
-//add new product, adds to inventory and uses prompts to grab all the relevant info 
+//requiring mySQL and inquirer packages and establishing connection with database
 
 const mysql = require("mysql");
 const inquirer = require("inquirer");
@@ -12,16 +6,15 @@ const inquirer = require("inquirer");
 var connection = mysql.createConnection({
     host: "localhost",
   
-    // Your port; if not 3306
     port: 3306,
   
-    // Your username
     user: "root",
   
-    // Your password
     password: "laCA1995$",
     database: "bamazon"
 });
+
+//function that asks manager to pick an option and performs actions based on which option was chosen
 
 function grabManagerCommand () {
 
@@ -37,15 +30,34 @@ function grabManagerCommand () {
             displayData();
             connection.end();
         } else if (user.managerCommand === "View Low Inventory") {
-            connection.query("SELECT * FROM items", function(err, res) {
+            connection.query("SELECT * FROM products", function(err, res) {
                 if (err) throw err;
 
+                //setting a Boolean value to check if there exist products with low inventory
+                var lowInventory = false;
+
+                //loops through res array, and if any product's stock quantity is below five, the loop breaks and returns lowInventory as true
                 for (var i = 0; i < res.length; i++) {
                     if (res[i].stock_quantity < 5) {
-                        console.log("Item ID: " + res[i].item_id);
-                        console.log("Name: " + res[i].product_name);
-                        console.log("Num in stock: " + res[i].stock_quantity);
+                        lowInventory = true;
                     }
+                }
+
+                //if lowInventory returns true, then log the relevant products to the console, else log "No products currently with low inventory."
+
+                if (lowInventory) {
+                    console.log("The following product(s) are low in inventory:");
+                    console.log("--------------------------------------");
+                    for (var i = 0; i < res.length; i++) {
+                        if (res[i].stock_quantity < 5) {
+                            console.log("Item ID: " + res[i].item_id);
+                            console.log("Name: " + res[i].product_name);
+                            console.log("Num in stock: " + res[i].stock_quantity);
+                            console.log("--------------------------------------");
+                        }
+                    }
+                } else {
+                    console.log("No products currently with low inventory.");
                 }
 
                 connection.end();
@@ -65,10 +77,10 @@ function grabManagerCommand () {
                     message: "How many units would you like to add?"
                 }
             ]).then(function(user) {
-                connection.query("SELECT * FROM items", function(err, res) {
+                connection.query("SELECT * FROM products", function(err, res) {
                     if (err) throw err;
                     
-                    connection.query("UPDATE items SET ? WHERE ?", 
+                    connection.query("UPDATE products SET ? WHERE ?", 
                         [
                             {
                                 stock_quantity: res[user.managerProductId - 1].stock_quantity + parseInt(user.managerChangeAmount)
@@ -77,7 +89,7 @@ function grabManagerCommand () {
                                 item_id: user.managerProductId
                             }
                         ],
-                        function(err, res) {
+                        function(err) {
 
                             if (err) throw err;
                             console.log("Inventory successfully added!");
@@ -92,46 +104,48 @@ function grabManagerCommand () {
                 {
                     type: "input",
                     name: "productName",
-                    message: "Please enter the product name."
+                    message: "Please enter the product name:"
                 }, 
                 {
                     type: "input",
                     name: "productDept",
-                    message: "Please enter the product department."
+                    message: "Please enter the product department:"
                 },
                 {
                     type: "input",
                     name: "productPrice",
-                    message: "Please enter the product price."
+                    message: "Please enter the product price:"
                 },
                 {
                     type: "input",
                     name: "productStock",
-                    message: "Please enter the product stock quantity"
+                    message: "Please enter the product stock quantity:"
                 }
             ]).then(function(user) {
-                connection.query("INSERT INTO items SET ?",
+                connection.query("INSERT INTO products SET ?",
                     {
                         product_name: user.productName,
                         department_name: user.productDept,
                         price: user.productPrice,
                         stock_quantity: user.productStock
                     },
-                    function(err, res) {
+                    function(err) {
                         if (err) throw err;
                         console.log("Product added!");
                         connection.end();
                     } 
                 )
-            })
+            });
         }
     });
 }
 
+//function that lists all available items and relevant information 
+
 function displayData() {
     console.log("Here are the products we are currently selling.");
     console.log("--------------------------------------");
-    connection.query ("SELECT * FROM items", function(err, res) {
+    connection.query ("SELECT * FROM products", function(err, res) {
         if (err) throw err;
         for (var i = 0; i < res.length; i++) {
             console.log("Item ID: " + res[i].item_id);
@@ -144,4 +158,5 @@ function displayData() {
     });
 }
 
+//initial execution of program
 grabManagerCommand();

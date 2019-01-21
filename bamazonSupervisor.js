@@ -1,3 +1,5 @@
+//requiring mySQL, inquirer and cli-table packages(used to log a table of data to the console), and establishing connection with database
+
 const mysql = require("mysql");
 const inquirer = require("inquirer");
 const Table = require ("cli-table2");
@@ -17,6 +19,7 @@ var connection = mysql.createConnection({
     database: "bamazon"
 });
 
+//function that prompts Supervisor, grabs input and runs program
 function grabSupCommand () {
     inquirer.prompt([
         {
@@ -28,9 +31,12 @@ function grabSupCommand () {
     ]).then(function(user) {
 
         if (user.supervisorCommand === "View Product Sales by Department") {
-            connection.query("SELECT dept.department_id, dept.department_name, dept.over_head_costs, SUM(items.product_sales) AS 'product_sales' FROM departments AS dept JOIN items ON dept.department_name = items.department_name GROUP BY dept.department_id",
+            connection.query("SELECT dept.department_id, dept.department_name, dept.over_head_costs, SUM(products.product_sales) AS 'product_sales' FROM departments AS dept JOIN products ON dept.department_name = products.department_name GROUP BY dept.department_id",
                 function(err, res) {
                     if (err) throw err;
+
+
+                    //code used to create table layout
 
                     var table = new Table({
                         chars: { 'top': '═' , 'top-mid': '╤' , 'top-left': '╔' , 'top-right': '╗'
@@ -68,7 +74,7 @@ function grabSupCommand () {
                         department_name: user.departmentName,
                         over_head_costs: user.departmentOverhead
                     },
-                    function(err, res) {
+                    function(err) {
                         if (err) throw err;
                         console.log("Department successfully added.")
                         connection.end();
@@ -79,4 +85,5 @@ function grabSupCommand () {
     });
 }
 
+//initial start to program
 grabSupCommand();

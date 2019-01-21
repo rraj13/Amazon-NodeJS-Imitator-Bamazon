@@ -1,26 +1,26 @@
+//requiring mysql and inquirer packages, and setting up connection to mySQL database
+
 const mysql = require("mysql");
 const inquirer = require("inquirer");
 
 var connection = mysql.createConnection({
     host: "localhost",
   
-    // Your port; if not 3306
     port: 3306,
   
-    // Your username
     user: "root",
   
-    // Your password
     password: "laCA1995$",
     database: "bamazon"
 });
+
 
 //Displays product information to user on load
 
 function displayData () {
     console.log("Here are the products we have in stock.");
     console.log("--------------------------------------");
-    connection.query ("SELECT * FROM items", function(err, res) {
+    connection.query ("SELECT * FROM products", function(err, res) {
         if (err) throw err;
         for (var i = 0; i < res.length; i++) {
             console.log("Item ID: " + res[i].item_id);
@@ -35,13 +35,15 @@ function displayData () {
 
 }
 
+//function to gather user input on product to buy and quantity 
+
 function askUser() {
 
     inquirer.prompt([
         {
             type: "input",
             name: "desiredItemId",
-            message: "Please enter the Item ID of the product you would like to purchase."
+            message: "Please enter the Item ID of the product you would like to purchase:"
 
         }, 
         {
@@ -52,18 +54,18 @@ function askUser() {
         
     ]).then(function(user) {
 
-        connection.query("SELECT * FROM items", function(err,res) {
+        connection.query("SELECT * FROM products", function(err,res) {
             if (err) throw err;
-            //cannot store in variables for some reason.
-
+            
+            //condition to check whether or not there is enough product in stock
             if (user.desiredQuantity <= res[user.desiredItemId - 1].stock_quantity) {
                 console.log("--------------------------------------");
                 console.log("You're order for " + res[user.desiredItemId -1].product_name + " has been placed!");
                 console.log("--------------------------------------");
                 console.log("Total Cost: $" + user.desiredQuantity * res[user.desiredItemId - 1].price);
 
-                //updating database
-                connection.query("UPDATE items SET ? WHERE ?",
+                //updating database with new product stock quantity as well as product sales (to be used in future exercise)
+                connection.query("UPDATE products SET ? WHERE ?",
                     [
                         {
                             stock_quantity: res[user.desiredItemId - 1].stock_quantity - user.desiredQuantity,
@@ -73,20 +75,23 @@ function askUser() {
                             item_id: user.desiredItemId
                         }
                     ],
-                    function(err, res) {
+                    function(err) {
                         if (err) throw err;
                         console.log("--------------------------------------");
-                        console.log("For company: Items updated!");
+                        console.log("For company: Products updated!");
                         connection.end();
                     }
                 )
 
             } else {
                 console.log("Insufficient Quantity. Please enter a new amount or choose another product");
+
+                    //runs askUser function again to let user choose a different quantity or product altogether
                     askUser();
             }
         });
     });
 }
 
+//initial execution of program
 displayData();
