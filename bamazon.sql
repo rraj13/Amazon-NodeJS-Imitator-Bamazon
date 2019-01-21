@@ -64,7 +64,7 @@ INSERT INTO departments (department_name, over_head_costs)
 VALUES ("Instructional Books", 40000);
 
 
-SELECT * FROM products;
+
 
 
 

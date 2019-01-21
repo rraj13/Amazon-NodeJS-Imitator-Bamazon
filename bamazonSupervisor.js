@@ -61,12 +61,12 @@ function grabSupCommand () {
                 {
                     type: "input",
                     name: "departmentName",
-                    message: "Please add the department name.",
+                    message: "Please add the department name:",
                 },
                 {
                     type: "input", 
                     name: "departmentOverhead",
-                    message: "Please enter the department overhead costs"
+                    message: "Please enter the department overhead costs:"
                 }
             ]).then(function(user) {
                 connection.query("INSERT INTO departments SET ?",
