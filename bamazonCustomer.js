@@ -66,7 +66,8 @@ function askUser() {
                 connection.query("UPDATE items SET ? WHERE ?",
                     [
                         {
-                            stock_quantity: res[user.desiredItemId - 1].stock_quantity - user.desiredQuantity
+                            stock_quantity: res[user.desiredItemId - 1].stock_quantity - user.desiredQuantity,
+                            product_sales: res[user.desiredItemId - 1].product_sales + user.desiredQuantity * res[user.desiredItemId - 1].price
                         },
                         {
                             item_id: user.desiredItemId
@@ -79,6 +80,7 @@ function askUser() {
                         connection.end();
                     }
                 )
+
             } else {
                 console.log("Insufficient Quantity. Please enter a new amount or choose another product");
                     askUser();
