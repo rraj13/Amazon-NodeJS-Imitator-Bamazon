@@ -1,7 +1,7 @@
 # Bamazon
 
 ## Introduction
-Hello! Bamazon is a command line node application that mimics an Amazon-like storefront application. My goal with this project was to implement mySQL with node.js and perform basic C.R.U.D operations onto a database. In addition, this project helped my hone my Javascript skills with for loops, if-else conditionals, and asynchronous programming. Because this is a CLI application, it cannot be deployed through Github or Heroku, so I have included a video demonstrating the app. Link is below.
+Hello! Bamazon is a command line node project that mimics an Amazon-like storefront application. My goal with this project was to implement mySQL with node.js and perform basic C.R.U.D operations onto a database. In addition, this project helped me hone my Javascript skills with for-loops, if-else conditionals, and asynchronous programming. Because this is a CLI application, it cannot be deployed through Github or Heroku, so I have included a video demonstrating the app. Link is below.
 
 https://youtu.be/1KgOd0wJ4H0
 
