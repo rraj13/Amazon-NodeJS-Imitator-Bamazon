@@ -5,7 +5,7 @@ Hello! Bamazon is a command line node project that mimics an Amazon-like storefr
 
 https://youtu.be/1KgOd0wJ4H0
 
-![alt text](/filename.png "Description goes here")
+![alt text](BamazonScreenshot.png "Bamazon Application Screenshot")
 
 Please read on for more information!
 
